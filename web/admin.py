@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin
 
-from . import models, forms
+from . import models
 from .adminsite import OrderedAdminSite
 
 
@@ -11,8 +11,7 @@ admin_site = OrderedAdminSite(
     site_title='PROuni',
     index_title='Адміністрування',
     admin_order=(
-        ('web', ('Profile', 'Business')),
-        ('auth', ('User', 'Group')),
+        ('web', ('Profile', 'Opportunity')),
     ),
     unregister=Group
 )
@@ -20,13 +19,11 @@ admin_site = OrderedAdminSite(
 
 @admin.register(models.Profile, site=admin_site)
 class ProfileAdmin(UserAdmin):
-    #add_form = forms.CustomUserCreationForm
-    #form = forms.CustomUserChangeForm
     model = models.Profile
     list_display = ('email', 'first_name', 'last_name', 'role', 'city')
     list_filter = ('role', 'city')
     search_fields = ('first_name', 'last_name', 'city')
-    ordering = ('email',)
+    ordering = ('last_name', 'first_name')
     filter_horizontal = ()
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
@@ -44,6 +41,6 @@ class ProfileAdmin(UserAdmin):
 
 @admin.register(models.Opportunity, site=admin_site)
 class OpportunityAdmin(admin.ModelAdmin):
-    list_display = ('name', 'short_descr')
-#    list_filter = ('city',)
-#    search_fields = ('first_name', 'last_name', 'city')
+    list_display = ('type', 'name', 'short_descr', 'employer', 'cost')
+    list_filter = ('type', 'employer__city')
+    search_fields = ('name', 'descr', 'employer', 'city')

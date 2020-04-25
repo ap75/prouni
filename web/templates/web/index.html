@@ -24,7 +24,7 @@
 		{% if user.is_staff %}
 			<a href="{% url 'admin:index' %}">Адміністрування</a> /
 		{% endif %}
-		<a href="{% url 'list' %}">Доступні можливості</a> /
+		<a href="{% url 'list' %}">Мій вибір</a> /
 		<a href="{% url 'logout' %}">{% trans 'Log out' %}</a>
 	{% else %}
 		{% block welcome-msg %}{% endblock %}
@@ -50,6 +50,16 @@
 				{% endif %}
 			</ul>
 		</section>
+		{% if promo %}
+		<section>
+			<h2>Ми рекомендуємо:</h2>
+			<ul>
+				{% for opp in promo %}
+					<li><b><a href="#">{{ opp.name }}</a></b> від {{ opp.employer.company }}</li>
+				{% endfor %}
+			</ul>
+		</section>
+		{% endif %}
 	</article>
 </div>
 {% endblock %}

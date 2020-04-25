@@ -8,4 +8,4 @@ class OpportunityTable(dts.Table):
     class Meta:
         model = models.Opportunity
         template_name = "django_tables2/bootstrap.html"
-        fields = ('name', 'cost', 'employer__company', 'descr')
+        fields = ('name', 'type', 'employer__company', 'descr')

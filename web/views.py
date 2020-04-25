@@ -15,7 +15,8 @@ class IndexView(TemplateView):
         context.update({
             'site_header': admin.admin_site.site_header,
             'site_title': admin.admin_site.site_title,
-            'title': 'Це головна сторінка'
+            'title': 'Це головна сторінка',
+            'promo': models.Opportunity.objects.all()[:3]
         })
         return context
 

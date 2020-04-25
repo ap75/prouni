@@ -1,12 +1,10 @@
+from random import randint
+
 from django.db import models
-#from django.conf import settings as conf_settings
+from django.forms import model_to_dict
 from django.utils import timezone
 from django.core.mail import send_mail
-#from django.core.exceptions import ValidationError
-#from django.core.validators import RegexValidator
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
-#from django.utils.translation import gettext_lazy as _, activate
-#from django.utils.timezone import make_aware, utc
 from django.utils.text import Truncator
 
 
@@ -67,6 +65,7 @@ class Profile(AbstractBaseUser):
     class Meta:
         verbose_name = 'Користувач'
         verbose_name_plural = 'Користувачі'
+        ordering = ('last_name', 'first_name')
 
     # Take care about compatibility :(
     def get_full_name(self):
@@ -92,12 +91,32 @@ class Profile(AbstractBaseUser):
         return True
 
 
+class OpportunityManager(models.Manager):
+    def random(self, quantity=1):
+        count = self.aggregate(ids=models.Count('id'))['ids']
+        return [
+            model_to_dict(self.all()[randint(0, count - 1)])
+                for i in range(quantity)
+        ]
+
+
 class Opportunity(models.Model):
+    INTERNSHIP = 'I'
+    FREE = 'F'
+    PAID = 'P'
+    TYPE_CHOICES = (
+        (INTERNSHIP, 'Стажування'),
+        (FREE, 'Волонтерство'),
+        (PAID, 'Платний курс'),
+    )
     employer = models.ForeignKey(Profile, on_delete=models.PROTECT,
         related_name='opportunities', verbose_name='Хто надає')
+    type = models.CharField('Тип', max_length=1, choices=TYPE_CHOICES, default=INTERNSHIP)
     name = models.CharField('Назва', max_length=128)
-    descr = models.TextField('Опис')
-    cost = models.IntegerField('Вартість', default=0)
+    descr = models.TextField('Опис', null=True, blank=True)
+    cost = models.IntegerField('Вартість', null=True, blank=True)
+
+    objects = OpportunityManager()
 
     class Meta:
         verbose_name = 'Можливість'
