@@ -1,0 +1,66 @@
+{% extends "admin/base.html" %}
+{% load render_table from django_tables2 %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/dashboard.css' %}">
+<style>
+ul.pagination > li {
+    float: left;
+    line-height: 22px;
+    margin-left: 10px;
+	list-style: none;
+}
+ul.pagination > li:first-child {
+    margin-left: 0;
+}
+</style>
+{% endblock %}
+
+{% block coltype %}colS{% endblock %}
+
+{% block title %}{{ title }} | {{ site_title }}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'index' %}">{{ site_header }}</a></h1>
+{% endblock %}
+
+{% block bodyclass %}{% endblock %}
+
+{% block usertools %}
+<div id="user-tools">
+	{% if user.is_authenticated %}
+		{% trans 'Welcome,' %}
+		<strong>{% firstof user.get_short_name user.get_username %}</strong>.
+		{% if user.is_staff %}
+			<a href="{% url 'admin:index' %}">Адміністрування</a> /
+		{% endif %}
+		<a href="{% url 'index' %}">Головна</a> /
+		<a href="{% url 'logout' %}">{% trans 'Log out' %}</a>
+	{% else %}
+		{% block welcome-msg %}{% endblock %}
+		<a href="{% url 'login' %}">{% trans 'Log in' %}</a>
+	{% endif %}
+</div>
+{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+<div class="filter">
+    <form id="filter_submit" class="filter">
+        <table class="filter">
+			{{ filter.form.as_table }}
+			<th colspan="2"><input type="submit" value="Обрати"></th>
+		</table>
+    </form>
+</div>
+<div id="content-main">
+	<div class="results">
+		{% render_table table %}
+	</div>
+</div>
+
+</div>
+{% endblock %}
