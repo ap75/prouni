@@ -42,5 +42,6 @@ class ProfileAdmin(UserAdmin):
 @admin.register(models.Opportunity, site=admin_site)
 class OpportunityAdmin(admin.ModelAdmin):
     list_display = ('type', 'name', 'short_descr', 'employer', 'cost')
-    list_filter = ('type', 'employer__city')
+    list_display_links = ('name',)
+    list_filter = ('type', 'employer__city', 'employer__scope', 'employer__company')
     search_fields = ('name', 'descr', 'employer', 'city')

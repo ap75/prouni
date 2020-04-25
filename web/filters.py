@@ -6,18 +6,13 @@ from .models import Opportunity
 
 
 class OpportunityFilter(django_filters.FilterSet):
+    type = django_filters.ChoiceFilter(choices=Opportunity.TYPE_CHOICES)
+    name = django_filters.CharFilter(lookup_expr='icontains')
+    employer__city = django_filters.AllValuesFilter(label='Місто')
+    employer__scope = django_filters.AllValuesFilter(label='Сфера діяльності')
+    employer__company = django_filters.AllValuesFilter(
+        label='Компанія або навчальний заклад')
+
     class Meta:
         model = Opportunity
-        fields = {
-            'cost': ['gt', 'lt'],
-            'name': ['icontains'],
-            'employer__company': ['icontains']
-        }
-        filter_overrides = {
-            models.BooleanField: {
-                'filter_class': django_filters.CharFilter,
-                'extra': lambda f: {
-                    'lookup_expr': 'icontains',
-                },
-            },
-        }
+        fields = ()

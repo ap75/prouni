@@ -52,10 +52,10 @@
 		</section>
 		{% if promo %}
 		<section>
-			<h2>Ми рекомендуємо:</h2>
+			<h2>Ми рекомендуємо нові можливості:</h2>
 			<ul>
 				{% for opp in promo %}
-					<li><b><a href="#">{{ opp.name }}</a></b> від {{ opp.employer.company }}</li>
+					<li><b><a href="{{ opp.get_absolute_url }}">{{ opp.name }}</a></b> від {{ opp.employer.company }}</li>
 				{% endfor %}
 			</ul>
 		</section>

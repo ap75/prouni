@@ -1,6 +1,7 @@
 from random import randint
 
 from django.db import models
+from django.urls import reverse
 from django.forms import model_to_dict
 from django.utils import timezone
 from django.core.mail import send_mail
@@ -90,6 +91,9 @@ class Profile(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
+    def __str__(self):
+        return self.get_full_name()
+
 
 class OpportunityManager(models.Manager):
     def random(self, quantity=1):
@@ -128,3 +132,6 @@ class Opportunity(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('detail', kwargs={'pk': self.id})

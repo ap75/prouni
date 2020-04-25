@@ -1,0 +1,70 @@
+{% extends "admin/base.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" type="text/css" href="{% static 'admin/css/dashboard.css' %}">
+<script src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
+<script>
+$(document).ready(function(){
+	$('form').submit(function () {
+		$('form').html('<h2>Вітаємо! Ви скористалися цією можливістю!</h2>');
+		return false;
+	});
+});
+</script>
+{% endblock %}
+
+{% block coltype %}colS{% endblock %}
+
+{% block title %}{{ title }} | {{ site_title }}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'index' %}">{{ site_header }}</a></h1>
+{% endblock %}
+
+{% block bodyclass %}{% endblock %}
+
+{% block usertools %}
+<div id="user-tools">
+	{% if user.is_authenticated %}
+		{% trans 'Welcome,' %}
+		<strong>{% firstof user.get_short_name user.get_username %}</strong>.
+		{% if user.is_staff %}
+			<a href="{% url 'admin:index' %}">Адміністрування</a> /
+		{% endif %}
+		<a href="{% url 'index' %}">Головна</a> /
+		<a href="{% url 'logout' %}">{% trans 'Log out' %}</a>
+	{% else %}
+		{% block welcome-msg %}{% endblock %}
+		<a href="{% url 'login' %}">{% trans 'Log in' %}</a>
+	{% endif %}
+</div>
+{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <article>
+		<section>
+			<h2>{{ object }}</h2>
+			<ul>
+				<li>Автор: <b>{{ object.employer.get_full_name }}</b></li>
+				<li>Місто: <b>{{ object.employer.city }}</b></li>
+				<li>Компанія: <b>{{ object.employer.company }}</b></li>
+				<li>Сфера діяльності: <b>{{ object.employer.scope }}</b></li>
+				<li>Тип: <b>{{ object.get_type_display  }}</b></li>
+				<li>Вартість: <b>{{ object.cost }}</b></li>
+				<li>Детальний опис: <b>{{ object.descr }}</b></li>
+			</ul>
+			<form>
+				<input type="hidden" name="id" value="{{ object.id }}">
+				<input type="submit" value="Так! Саме то шукав!">
+			</form>
+		</section>
+	</article>
+</div>
+
+</div>
+{% endblock %}

@@ -29,7 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_filters',
     'django_tables2',
-    'web'
+    'web.apps.WebConfig'
 ]
 
 MIDDLEWARE = [
