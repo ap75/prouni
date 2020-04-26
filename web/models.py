@@ -56,6 +56,9 @@ class Profile(AbstractBaseUser):
     scope = models.CharField('Сфера діяльності або факультет', max_length=255, null=True, blank=True)
     course = models.PositiveIntegerField('Курс', null=True, blank=True)
 
+    # Subscriptions
+    subs = models.ManyToManyField("Opportunity",
+        related_name='students', verbose_name='Підписки', blank=True)
 
     objects = ProfileManager()
 

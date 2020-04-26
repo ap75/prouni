@@ -7,8 +7,28 @@
 <script src="{% static 'admin/js/vendor/jquery/jquery.js' %}"></script>
 <script>
 $(document).ready(function(){
+	function get_csrftoken() {
+		const CSRFTOKEN = 'csrftoken';
+		if (document.cookie)
+			for (var cookie of document.cookie.split(';'))
+				if ($.trim(cookie).startsWith(CSRFTOKEN + '='))
+					return decodeURIComponent(cookie.substring(CSRFTOKEN.length + 2))
+		return '';
+	}
+	$.ajaxSetup({
+		headers: {
+			'X-CSRFToken': get_csrftoken()
+		}
+	});
 	$('form').submit(function () {
-		$('form').html('<h2>Вітаємо! Ви скористалися цією можливістю!</h2>');
+		console.log('X-CSRFToken', get_csrftoken());
+		$.post(
+			"{% url 'subscribe' %}",
+			{'id': {{ user.id }}, 'opp': {{ object.id }}}
+		).done(function(data) {
+			$('form').html('<h2>Вітаємо! Ви скористалися цією можливістю!</h2>');
+			console.log(data)
+		});
 		return false;
 	});
 });
@@ -58,10 +78,14 @@ $(document).ready(function(){
 				<li>Вартість: <b>{{ object.cost }}</b></li>
 				<li>Детальний опис: <b>{{ object.descr }}</b></li>
 			</ul>
+			{% if subscribed %}
+			<b>Ви вже підписалися на цю можливість</b>
+			{% else %}
 			<form>
-				<input type="hidden" name="id" value="{{ object.id }}">
+				{% csrf_token %}
 				<input type="submit" value="Так! Саме то шукав!">
 			</form>
+			{% endif %}
 		</section>
 	</article>
 </div>

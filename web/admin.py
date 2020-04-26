@@ -29,6 +29,7 @@ class ProfileAdmin(UserAdmin):
         (None, {'fields': ('email', 'password')}),
         ('Права доступа', {'fields': ('role', 'is_active')}),
         ('Персональні дані', {'fields': ('first_name', 'last_name', 'city', 'company', 'scope', 'course')}),
+        ('Підписки', {'fields': ('subs',)}),
         ('Важливи дати', {'fields': ('last_login', 'date_joined',)}),
     )
     add_fieldsets = (
